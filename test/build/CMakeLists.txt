@@ -1,0 +1,82 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+PROJECT(ncorr_test)
+
+# Only tested for g++ on Ubuntu 12.04. This assumes all required libraries have been 
+# installed, so directories to dependent libraries and their headers are not explicitly 
+# included, since the install directories are searched automatically by g++.
+
+# Set output for executable
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
+
+# Add executable
+ADD_EXECUTABLE(ncorr_test ../src/ncorr_test.cpp)
+
+# Set C++11 support
+set_property(TARGET ncorr_test PROPERTY CXX_STANDARD 11)
+set_property(TARGET ncorr_test PROPERTY CXX_STANDARD_REQUIRED ON)
+
+# Set -03 optimization
+INCLUDE(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-O3" COMPILER_SUPPORTS_O3)
+if (COMPILER_SUPPORTS_O3)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+endif()
+
+# Disable debugging
+ADD_DEFINITIONS(-DNDEBUG)
+
+# Add ncorr library
+FIND_LIBRARY(NCORR_LIBRARY NAMES ncorr)
+TARGET_LINK_LIBRARIES(ncorr_test ${NCORR_LIBRARY})
+
+# Add opencv libraries
+FIND_LIBRARY(OPENCV_LIBRARY1 NAMES opencv_core)
+TARGET_LINK_LIBRARIES(ncorr_test ${OPENCV_LIBRARY1})
+
+FIND_LIBRARY(OPENCV_LIBRARY2 NAMES opencv_highgui)
+TARGET_LINK_LIBRARIES(ncorr_test ${OPENCV_LIBRARY2})
+
+FIND_LIBRARY(OPENCV_LIBRARY3 NAMES opencv_imgcodecs)
+TARGET_LINK_LIBRARIES(ncorr_test ${OPENCV_LIBRARY3})
+
+FIND_LIBRARY(OPENCV_LIBRARY4 NAMES opencv_imgproc)
+TARGET_LINK_LIBRARIES(ncorr_test ${OPENCV_LIBRARY4})
+
+FIND_LIBRARY(OPENCV_LIBRARY5 NAMES opencv_videoio)
+TARGET_LINK_LIBRARIES(ncorr_test ${OPENCV_LIBRARY5})
+
+# Add fftw library
+FIND_LIBRARY(FFTW_LIBRARY NAMES fftw3)
+TARGET_LINK_LIBRARIES(ncorr_test ${FFTW_LIBRARY})
+
+# Add suite sparse libraries
+FIND_LIBRARY(SUITESPARSE_LIBRARY1 NAMES spqr)
+TARGET_LINK_LIBRARIES(ncorr_test ${SUITESPARSE_LIBRARY1})
+
+FIND_LIBRARY(SUITESPARSE_LIBRARY2 NAMES cholmod)
+TARGET_LINK_LIBRARIES(ncorr_test ${SUITESPARSE_LIBRARY2})
+
+FIND_LIBRARY(SUITESPARSE_LIBRARY3 NAMES suitesparseconfig)
+TARGET_LINK_LIBRARIES(ncorr_test ${SUITESPARSE_LIBRARY3})
+
+FIND_LIBRARY(SUITESPARSE_LIBRARY4 NAMES amd)
+TARGET_LINK_LIBRARIES(ncorr_test ${SUITESPARSE_LIBRARY4})
+
+FIND_LIBRARY(SUITESPARSE_LIBRARY5 NAMES colamd)
+TARGET_LINK_LIBRARIES(ncorr_test ${SUITESPARSE_LIBRARY5})
+
+# Add lapack library
+FIND_LIBRARY(LAPACK_LIBRARY NAMES lapack)
+TARGET_LINK_LIBRARIES(ncorr_test ${LAPACK_LIBRARY})
+
+# Add blas library
+FIND_LIBRARY(BLAS_LIBRARY NAMES blas)
+TARGET_LINK_LIBRARIES(ncorr_test ${BLAS_LIBRARY})
+
+# Add gfortran library (required from blas)
+FIND_LIBRARY(GFORTRAN_LIBRARY NAMES gfortran)
+TARGET_LINK_LIBRARIES(ncorr_test ${GFORTRAN_LIBRARY})
+
+# Add pthreads
+FIND_PACKAGE(Threads)
+TARGET_LINK_LIBRARIES(ncorr_test ${CMAKE_THREAD_LIBS_INIT})
