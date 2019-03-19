@@ -34,11 +34,22 @@ std::ostream& operator<<(std::ostream &os, const Image2D &img) {
     return os;
 }
 
-void imshow(const Image2D &img, Image2D::difference_type delay) { 
-    imshow(img.get_gs(),delay);
+void imshow(const Image2D &img, Image2D::difference_type delay) {
+    if (img.image_data.get_pointer()) {
+        imshow(img.image_data,delay);
+    } else {
+        imshow(img.get_gs(),delay);
+    }
 }  
 
 bool isequal(const Image2D &img1, const Image2D &img2) {
+    if (img1.image_data.get_pointer() && img2.image_data.get_pointer()) {
+        return img1.image_data == img2.image_data;
+    } else if (img1.image_data.get_pointer() && !img2.image_data.get_pointer()) {
+        return false;
+    } else if (!img1.image_data.get_pointer() && img2.image_data.get_pointer()) {
+        return false;
+    }
     return *img1.filename_ptr == *img2.filename_ptr;
 }
 
@@ -54,6 +65,10 @@ void save(const Image2D &img, std::ofstream &os) {
 // Access --------------------------------------------------------------------//
 Array2D<double> Image2D::get_gs() const {
     // get_gs() uses opencv's imread() function; must convert Mat to Array2D type.
+    if (image_data->get_pointer()) {
+        return image_data;
+    }    
+  
     cv::Mat cv_img = cv::imread((*filename_ptr), cv::IMREAD_GRAYSCALE);
     if (!cv_img.data) {
         throw std::invalid_argument("Image file : " + *filename_ptr + " cannot be found or read.");

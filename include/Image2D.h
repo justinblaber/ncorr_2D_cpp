@@ -27,6 +27,7 @@ class Image2D final {
         // Additional Constructors -------------------------------------------//
         // Allow implicit conversion        
         Image2D(std::string filename) : filename_ptr(std::make_shared<std::string>(std::move(filename))) { } // by-value
+        Image2D(const Array2D<double> &array_data) : image_data(array_data),filename_ptr(std::make_shared<std::string>("(none)")) { } // by-value
                 
         // Static factory methods --------------------------------------------//
         static Image2D load(std::ifstream&);
@@ -43,6 +44,7 @@ class Image2D final {
         
     private:
         std::shared_ptr<std::string> filename_ptr; // immutable
+        Array2D<double> image_data; // immutable
 };
 
 }
