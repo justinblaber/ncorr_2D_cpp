@@ -44,7 +44,15 @@ void imshow(const Image2D &img, Image2D::difference_type delay) {
 
 bool isequal(const Image2D &img1, const Image2D &img2) {
     if (img1.image_data.get_pointer() && img2.image_data.get_pointer()) {
-        return img1.image_data == img2.image_data;
+        Array2D<bool> equality = (img1.image_data == img2.image_data);
+	bool all_eq=true;
+	for (auto & el_eq: equality) {
+	  if (!el_eq) {
+	    all_eq=false;
+	  }
+	}
+	
+        return all_eq;
     } else if (img1.image_data.get_pointer() && !img2.image_data.get_pointer()) {
         return false;
     } else if (!img1.image_data.get_pointer() && img2.image_data.get_pointer()) {
@@ -65,7 +73,7 @@ void save(const Image2D &img, std::ofstream &os) {
 // Access --------------------------------------------------------------------//
 Array2D<double> Image2D::get_gs() const {
     // get_gs() uses opencv's imread() function; must convert Mat to Array2D type.
-    if (image_data->get_pointer()) {
+    if (image_data.get_pointer()) {
         return image_data;
     }    
   
