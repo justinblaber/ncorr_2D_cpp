@@ -1524,7 +1524,7 @@ namespace details {
         // seed with the highest correlation coefficient is used in the 
         // analysis. The higher the number of seeds, the more robust (but slower)
         // the analysis will be.
-        difference_type num_redundant_seeds = 4; 
+        difference_type num_redundant_seeds = 12; 
         auto redundant_seeds = get_ROI_partition_diagram_seeds(get_ROI_partition_diagram(roi_reduced, num_redundant_seeds), roi_reduced, num_redundant_seeds);
         for (auto &region_seeds: redundant_seeds) {            
             // Must scale seed position
