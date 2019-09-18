@@ -44,8 +44,21 @@ public:
     static Strain2D load(std::ifstream&);
 
     // Operators interface ---------------------------------------------------//
-    friend std::ostream& operator<<(std::ostream&, const Strain2D&); 
-    friend void imshow(const Strain2D&, difference_type delay = -1);  
+    friend std::ostream& operator<<(std::ostream&, const Strain2D&);
+  
+    // sdh4 09/18/19 move imshow() contents into header to accommodate
+    // http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#136
+    // (See "Proposed resolution" that any frend declaration with a default
+    // argument expression must be a definition)
+    friend void imshow(const Strain2D &strain, difference_type delay = -1)
+    {
+      // Just show each separately for now. If you combine into one buffer, you 
+      // must scale each as their ranges might be different.
+      imshow(strain.eyy, delay); 
+      imshow(strain.exy, delay); 
+      imshow(strain.exx, delay); 
+
+    }
     friend bool isequal(const Strain2D&, const Strain2D&);
     friend void save(const Strain2D&, std::ofstream&);
         

@@ -34,7 +34,18 @@ class Image2D final {
             
         // Interface functions -----------------------------------------------//
         friend std::ostream& operator<<(std::ostream&, const Image2D&); 
-        friend void imshow(const Image2D&, difference_type delay = -1);  
+        // sdh4 09/18/19 move imshow() contents into header to accommodate
+        // http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#136
+        // (See "Proposed resolution" that any frend declaration with a default
+        // argument expression must be a definition)
+        friend void imshow(const Image2D &img, difference_type delay = -1) {
+	  if (img.image_data.get_pointer()) {
+	    imshow(img.image_data,delay);
+	  } else {
+	    imshow(img.get_gs(),delay);
+	  }
+	  
+	}
         friend bool isequal(const Image2D&, const Image2D&);
         friend void save(const Image2D&, std::ofstream&);
         

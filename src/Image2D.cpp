@@ -34,13 +34,6 @@ std::ostream& operator<<(std::ostream &os, const Image2D &img) {
     return os;
 }
 
-void imshow(const Image2D &img, Image2D::difference_type delay) {
-    if (img.image_data.get_pointer()) {
-        imshow(img.image_data,delay);
-    } else {
-        imshow(img.get_gs(),delay);
-    }
-}  
 
 bool isequal(const Image2D &img1, const Image2D &img2) {
     if (img1.image_data.get_pointer() && img2.image_data.get_pointer()) {

@@ -53,7 +53,24 @@ public:
         
     // Operators interface ---------------------------------------------------//
     friend std::ostream& operator<<(std::ostream&, const Data2D&); 
-    friend void imshow(const Data2D&, difference_type delay = -1);  
+    // sdh4 09/18/19 move imshow() contents into header to accommodate
+    // http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#136
+    // (See "Proposed resolution" that any frend declaration with a default
+    // argument expression must be a definition)
+    friend void imshow(const Data2D& data, difference_type delay = -1) {
+      // Form buffer; set all values outside of ROI to slightly below minimum 
+      // value of data, then show it, this guarantees the area outside the ROI is 
+      // black.
+      Array2D<double> A_buf = data.get_array();
+      Array2D<double> A_data = A_buf(data.get_roi().get_mask());
+      if (!A_data.empty()) {
+        double A_min = min(A_data);
+        // Subtract small amount so min value doesn't show as black.
+        A_buf(~data.get_roi().get_mask()) = std::nextafter(A_min, A_min-1); 
+      }    
+      imshow(A_buf,delay);
+    }
+  
     friend bool isequal(const Data2D&, const Data2D&);
     friend void save(const Data2D&, std::ofstream&);
        

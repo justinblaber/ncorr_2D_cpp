@@ -55,19 +55,6 @@ std::ostream& operator<<(std::ostream &os, const Data2D &data) {
     return os;
 }
 
-void imshow(const Data2D &data, Data2D::difference_type delay) { 
-    // Form buffer; set all values outside of ROI to slightly below minimum 
-    // value of data, then show it, this guarantees the area outside the ROI is 
-    // black.
-    Array2D<double> A_buf = data.get_array();
-    Array2D<double> A_data = A_buf(data.get_roi().get_mask());
-    if (!A_data.empty()) {
-        double A_min = min(A_data);
-        // Subtract small amount so min value doesn't show as black.
-        A_buf(~data.get_roi().get_mask()) = std::nextafter(A_min, A_min-1); 
-    }    
-    imshow(A_buf,delay);
-}  
 
 bool isequal(const Data2D &data1, const Data2D &data2) {
     return isequal(data1.get_array(), data2.get_array()) &&
