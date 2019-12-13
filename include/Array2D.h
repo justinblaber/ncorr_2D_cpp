@@ -35,7 +35,7 @@ extern "C" {                    // Blas - for matrix multiplication
 }  
 #include "fftw3.h"              // For convolution and deconvolution
 #include "opencv2/opencv.hpp"   // For imshow()
-#include "SuiteSparseQR.hpp"    // for in-paint
+#include "suitesparse/SuiteSparseQR.hpp"    // for in-paint
 
 namespace ncorr {          
 
